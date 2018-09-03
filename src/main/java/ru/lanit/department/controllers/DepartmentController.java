@@ -29,26 +29,26 @@ public class DepartmentController {
         return new RequestAnswer("Create complete", service.save(department));
     }
 
-    @RequestMapping("/all")
+    @GetMapping("/all")
     RequestAnswer getAll() {
         log.trace("Get All request evaluate");
         return new RequestAnswer("Get all departments complete", service.getAll());
     }
 
-    @RequestMapping("/get/id/{id}")
+    @GetMapping("/get/id/{id}")
     RequestAnswer getById(@PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Get Department by id request evaluate");
         return new RequestAnswer("Get Department by id complete", service.getById(id));
     }
 
-    @RequestMapping("/update/id/{id}")
+    @PutMapping("/update/id/{id}")
     RequestAnswer updateDepartmentById(@RequestBody Department updateDepartment, @PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Update Department By Id request evaluate");
         return new RequestAnswer("Update Department by id complete",
                 service.updateById(updateDepartment, id));
     }
 
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     RequestAnswer deleteDepartment(@PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Delete Department request evaluate");
         return new RequestAnswer("Delete Department complete", service.delete(id));

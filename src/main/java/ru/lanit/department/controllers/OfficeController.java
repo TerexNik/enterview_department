@@ -27,26 +27,26 @@ public class OfficeController {
         return new RequestAnswer("Create complete", service.save(office));
     }
 
-    @RequestMapping("/all")
+    @GetMapping("/all")
     RequestAnswer getAll() {
         log.trace("Get All request evaluate");
         return new RequestAnswer("Get all offices complete", service.getAll());
     }
 
-    @RequestMapping("/get/id/{id}")
+    @GetMapping("/get/id/{id}")
     RequestAnswer getById(@PathVariable String id) throws OfficeNotFoundException {
         log.trace("Get Office by id evaluate");
         return new RequestAnswer("Get Office by id complete", service.getById(id));
     }
 
-    @RequestMapping("/update/id/{id}")
+    @PutMapping("/update/id/{id}")
     RequestAnswer updateOfficeById(@RequestBody Office updateOffice, @PathVariable String id)
             throws OfficeNotFoundException {
         log.trace("Update Office By Id evaluate");
         return new RequestAnswer("Update Office by id complete", service.getById(id));
     }
 
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     RequestAnswer deleteOffice(@PathVariable String id) throws OfficeNotFoundException {
         log.trace("Delete Office evaluate");
         return new RequestAnswer("Delete Office complete", service.delete(id));
