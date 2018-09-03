@@ -1,0 +1,79 @@
+// Plugins
+
+plugins {
+    id 'org.springframework.boot' version '2.0.4.RELEASE'
+    id 'com.bmuschko.docker-remote-api' version '3.6.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+// Varaibles
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Tasks
+bootJar {
+    baseName = 'department'
+    group 'ru.lanit'
+    version '0.1'
+}
+
+task dev(type: Copy) {
+    from "build/libs/department-0.1.jar"
+    into "docker/back-end"
+    dependsOn(build)
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.9'
+}
+// Docker tasks
+task clearContainers(type: Exec) {
+    commandLine 'docker', 'stop', "db", "back-end"
+}
+
+task runDB(type: Exec) {
+    commandLine "docker", "run", "--name", "db", "--rm",
+            "-e", "POSTGRES_USER=$DATABASE_USERNAME",
+            "-e", "POSTGRES_PASSWORD=$DATABASE_PASSWORD",
+            "-e", "POSTGRES_DB=$DATABASE_NAME",
+            "-p", "5432:5432", "-d", "postgres:11-alpine"
+    dependsOn(clearContainers)
+}
+
+task buildContainer(type: Exec) {
+    commandLine "docker", "build", "-t", "spring-boot",
+            "--build-arg", "JAR_FILE=$JAR_FILE",
+            "--build-arg", "PORT=$PORT",
+            "${buildDir}/../docker/back-end"
+    dependsOn(runDB)
+    dependsOn(dev)
+}
+
+task runDocker(type: Exec) {
+    commandLine "docker", "run", "--rm",
+            "-e", "JDBC_DATABASE_URL=$DATABASE_URL_DOCKER",
+            "-e", "JDBC_DATABASE_USERNAME=$DATABASE_USERNAME",
+            "-e", "JDBC_DATABASE_PASSWORD=$DATABASE_PASSWORD",
+            "-e", "PORT=$PORT", "--link", "db:db", "--name", "back-end",
+            "-p", "$PORT:$PORT", "spring-boot"
+    dependsOn(buildContainer)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.apache.tomcat:tomcat-jdbc'
+    compile 'org.postgresql:postgresql'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'com.h2database:h2'
+}
