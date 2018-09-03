@@ -1,5 +1,7 @@
 ## Departments project
 
+[![Build Status](https://travis-ci.org/TerexNik/enterview_department.svg?branch=master)](https://travis-ci.org/TerexNik/enterview_department)
+
 to run project you need to add gradle.properties file to main folder, with:
 ```
 PORT= // Port for your application
