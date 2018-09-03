@@ -1,5 +1,6 @@
 package ru.lanit.department.controllers;
 
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import ru.lanit.department.services.DepartmentServiceImpl;
 
 @RestController
 @RequestMapping("/department/crud")
+@Api(value="Department crud endpoints", description="Crud operations for Departments")
 public class DepartmentController {
 
     private final Logger log = LoggerFactory.getLogger(DepartmentController.class);
