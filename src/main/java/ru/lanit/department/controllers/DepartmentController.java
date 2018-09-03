@@ -23,32 +23,32 @@ public class DepartmentController {
     }
 
 
-    @PostMapping(value = "/create")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
     RequestAnswer newDepartment(@RequestBody Department department) {
         log.trace("Create request evaluate");
         return new RequestAnswer("Create complete", service.save(department));
     }
 
-    @GetMapping("/all")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     RequestAnswer getAll() {
         log.trace("Get All request evaluate");
         return new RequestAnswer("Get all departments complete", service.getAll());
     }
 
-    @GetMapping("/get/id/{id}")
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     RequestAnswer getById(@PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Get Department by id request evaluate");
         return new RequestAnswer("Get Department by id complete", service.getById(id));
     }
 
-    @PutMapping("/update/id/{id}")
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT, consumes = "application/json")
     RequestAnswer updateDepartmentById(@RequestBody Department updateDepartment, @PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Update Department By Id request evaluate");
         return new RequestAnswer("Update Department by id complete",
                 service.updateById(updateDepartment, id));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     RequestAnswer deleteDepartment(@PathVariable String id) throws DepartmentNotFoundException {
         log.trace("Delete Department request evaluate");
         return new RequestAnswer("Delete Department complete", service.delete(id));

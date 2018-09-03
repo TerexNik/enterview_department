@@ -19,7 +19,7 @@ public class Department implements Serializable {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Set<Office> offices;
 

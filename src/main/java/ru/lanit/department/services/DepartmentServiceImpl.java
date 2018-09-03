@@ -16,19 +16,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final Logger log = LoggerFactory.getLogger(DepartmentServiceImpl.class);
     private final DepartmentRepository repository;
-    private final OfficeRepository officeRepository;
 
     @Autowired
-    public DepartmentServiceImpl(DepartmentRepository repository, OfficeRepository officeRepository) {
+    public DepartmentServiceImpl(DepartmentRepository repository) {
         this.repository = repository;
-        this.officeRepository = officeRepository;
     }
 
 
     @Override
     public Department save(Department department) {
-        log.trace("Save Departments offices");
-        officeRepository.saveAll(department.getOffices());
         log.trace("Save Department");
         return repository.save(department);
     }
@@ -61,7 +57,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         return repository.findById(id)
                 .map(department -> {
                     department.setName(updateDepartment.getName());
-                    officeRepository.saveAll(updateDepartment.getOffices());
                     department.setOffices(updateDepartment.getOffices());
                     return repository.save(department);
                 })

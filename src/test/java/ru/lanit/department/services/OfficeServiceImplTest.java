@@ -28,8 +28,6 @@ public class OfficeServiceImplTest {
 
     @Mock
     private OfficeRepository repository;
-    @Mock
-    private DepartmentRepository departmentRepository;
 
     @Before
     public void setUp() {
@@ -91,6 +89,12 @@ public class OfficeServiceImplTest {
     @Test
     public void TestOfficesSave() {
         // Prepare
+        Office mock = new Office();
+        mock.setId("1");
+        Set<Department> departmentsMock = new HashSet<>();
+        departmentsMock.add(new Department());
+        mock.setDepartments(departmentsMock);
+
         HashSet<Department> departments = new HashSet<>();
         Department department = new Department();
         department.setName("Test");
@@ -106,13 +110,21 @@ public class OfficeServiceImplTest {
         office.setPropertyType(0L);
         office.setDepartments(departments);
 
+        // When
+        when(repository.save(office)).thenReturn(office);
+
         // Testing
-        service.save(office);
+        Office result = service.save(office);
 
         // Verify
         verify(repository).save(office);
-        verify(departmentRepository).saveAll(departments);
 
+        assertEquals("Address", result.getAddress());
+        assertEquals("City",    result.getCity());
+        assertEquals("A",       result.getCategory());
+        assertEquals("1",       result.getId());
+        assertEquals("1",       result.getDepartments().iterator().next().getId());
+        assertEquals("Test",    result.getDepartments().iterator().next().getName());
     }
 
     @Test
@@ -141,14 +153,12 @@ public class OfficeServiceImplTest {
 
         // When
         when(repository.save(mock)).thenReturn(office);
-        when(departmentRepository.saveAll(departmentsMock)).thenReturn(departments);
 
         // Testing
         Office result = service.updateById(mock, "1");
 
         // Validate
         verify(repository).save(mock);
-        verify(departmentRepository).saveAll(departmentsMock);
 
         assertEquals("Address", result.getAddress());
         assertEquals("City",    result.getCity());

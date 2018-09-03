@@ -28,8 +28,6 @@ public class DepartmentServiceImplTest {
 
     @Mock
     private DepartmentRepository repository;
-    @Mock
-    private OfficeRepository officeRepository;
 
     @Before
     public void setUp() throws DepartmentNotFoundException {
@@ -54,8 +52,6 @@ public class DepartmentServiceImplTest {
                 .thenReturn(Optional.of(department));
         when(repository.save(department))
                 .thenReturn(department);
-        when(officeRepository.saveAll(offices))
-                .thenReturn(offices);
     }
 
     @Test(expected = DepartmentNotFoundException.class)
@@ -93,12 +89,17 @@ public class DepartmentServiceImplTest {
         department.setOffices(offices);
 
         // Testing
-        service.save(department);
+        Department result = service.save(department);
 
         // Verify
         verify(repository).save(department);
-        verify(officeRepository).saveAll(offices);
 
+        assertEquals("Test",    result.getName());
+        assertEquals("1",       result.getId());
+        assertEquals("Address", result.getOffices().iterator().next().getAddress());
+        assertEquals("City",    result.getOffices().iterator().next().getCity());
+        assertEquals("A",       result.getOffices().iterator().next().getCategory());
+        assertEquals("1",       result.getOffices().iterator().next().getId());
     }
 
     @Test
@@ -127,21 +128,19 @@ public class DepartmentServiceImplTest {
 
         // When
         when(repository.save(departmentMock)).thenReturn(department);
-        when(officeRepository.saveAll(officesMock)).thenReturn(offices);
 
         // Testing
         Department result = service.updateById(departmentMock, "1");
 
         // Validate
         verify(repository).save(departmentMock);
-        verify(officeRepository).saveAll(officesMock);
 
-        assertEquals("Test", result.getName());
-        assertEquals("1", result.getId());
+        assertEquals("Test",    result.getName());
+        assertEquals("1",       result.getId());
         assertEquals("Address", result.getOffices().iterator().next().getAddress());
-        assertEquals("City", result.getOffices().iterator().next().getCity());
-        assertEquals("A", result.getOffices().iterator().next().getCategory());
-        assertEquals("1", result.getOffices().iterator().next().getId());
+        assertEquals("City",    result.getOffices().iterator().next().getCity());
+        assertEquals("A",       result.getOffices().iterator().next().getCategory());
+        assertEquals("1",       result.getOffices().iterator().next().getId());
     }
 
     @Test(expected = DepartmentNotFoundException.class)

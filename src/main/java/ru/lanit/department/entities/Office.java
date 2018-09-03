@@ -27,7 +27,7 @@ public class Office {
     @Column(length = 1)
     private Double value;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Set<Department> departments;
 

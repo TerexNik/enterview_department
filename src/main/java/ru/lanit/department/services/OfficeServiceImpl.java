@@ -15,12 +15,10 @@ import java.util.List;
 public class OfficeServiceImpl implements OfficeService {
 
     private final Logger log = LoggerFactory.getLogger(DepartmentServiceImpl.class);
-    private final DepartmentRepository departmentRepository;
     private final OfficeRepository repository;
 
     @Autowired
-    public OfficeServiceImpl(DepartmentRepository departmentRepository, OfficeRepository repository) {
-        this.departmentRepository = departmentRepository;
+    public OfficeServiceImpl(OfficeRepository repository) {
         this.repository = repository;
     }
 
@@ -39,7 +37,6 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     public Office save(Office office) {
         log.trace("Save Office");
-        departmentRepository.saveAll(office.getDepartments());
         return repository.save(office);
     }
 
@@ -62,7 +59,6 @@ public class OfficeServiceImpl implements OfficeService {
                     office.setCategory(updateOffice.getCategory());
                     office.setValue(updateOffice.getValue());
                     office.setPropertyType(updateOffice.getPropertyType());
-                    departmentRepository.saveAll(updateOffice.getDepartments());
                     office.setDepartments(updateOffice.getDepartments());
                     return repository.save(office);
                 })
@@ -72,8 +68,9 @@ public class OfficeServiceImpl implements OfficeService {
 
     @Override
     public void updateValue() {
-        repository.findAll().forEach(office ->
-            office.setValue(office.getValue() - office.getValue()*0.01)
-        );
+        repository.findAll().forEach(office -> {
+            office.setValue(office.getValue() - office.getValue()*0.01);
+            repository.save(office);
+        });
     }
 }
