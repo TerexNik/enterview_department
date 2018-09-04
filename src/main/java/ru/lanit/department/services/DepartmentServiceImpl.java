@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.lanit.department.entities.Department;
 import ru.lanit.department.exceptions.DepartmentNotFoundException;
 import ru.lanit.department.repository.DepartmentRepository;
-import ru.lanit.department.repository.OfficeRepository;
 
 import java.util.List;
 
