@@ -54,11 +54,11 @@ task buildContainer(type: Exec) {
 }
 
 task runDocker(type: Exec) {
-    commandLine "docker", "run", "--rm",
+    commandLine "docker", "run", "--rm", "-d", "--name", "back-end",
             "-e", "JDBC_DATABASE_URL=$DATABASE_URL_DOCKER",
             "-e", "JDBC_DATABASE_USERNAME=$DATABASE_USERNAME",
             "-e", "JDBC_DATABASE_PASSWORD=$DATABASE_PASSWORD",
-            "-e", "PORT=$PORT", "--link", "db:db", "--name", "back-end",
+            "-e", "PORT=$PORT", "--link", "db:db",
             "-p", "$PORT:$PORT", "spring-boot"
     dependsOn(buildContainer)
 }
